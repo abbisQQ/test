@@ -1,7 +1,9 @@
 package com.abbisqq.aquaworld.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

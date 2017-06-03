@@ -43,4 +43,6 @@ public class MainActivity extends AppCompatActivity {
     public void startClicked(View view) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container,new FishCategoryListFragment()).commit();
     }
+
+
 }
