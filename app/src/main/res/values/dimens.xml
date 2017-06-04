@@ -2,5 +2,17 @@
 <resources>
 
 
-    
+    <dimen name="image_width">150dp</dimen>
+    <dimen name="image_height">100dp</dimen>
+    <dimen name="text_size">25sp</dimen>
+
+
+    <dimen name="margin_start">10dp</dimen>
+    <dimen name="margin_end">10dp</dimen>
+    <dimen name="margin_top">5dp</dimen>
+    <dimen name="margin_bottom">5dp</dimen>
+
+
+
+
 </resources>

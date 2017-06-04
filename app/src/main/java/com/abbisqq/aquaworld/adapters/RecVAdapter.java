@@ -50,7 +50,7 @@ public class RecVAdapter extends RecyclerView.Adapter<RecVAdapter.RecVHolder>{
         Picasso.with(mContext)
                 .load(mCursor.getString(mCursor.getColumnIndex(FishContract.IMAGE)))
                 .error(R.drawable.nofish)
-                .resize(150,80).into(holder.iv);
+                .fit().into(holder.iv);
 
 
     }

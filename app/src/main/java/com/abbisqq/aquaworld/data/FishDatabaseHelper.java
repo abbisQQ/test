@@ -14,13 +14,17 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 public class FishDatabaseHelper  extends SQLiteAssetHelper {
 
 
-    private static final String DATABASE_NAME = "aquaworld.db";
-    private static final int DATABASE_VERSION = 1;
     String tableName;
 
     public FishDatabaseHelper(Context context,String name) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, FishContract.DATABASE_NAME, null, FishContract.DATABASE_VERSION);
         tableName =  name;
+    }
+
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        super.onUpgrade(db, oldVersion, newVersion);
     }
 
     public Cursor getFishes() {
