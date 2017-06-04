@@ -34,10 +34,16 @@ public class FishDatabaseHelper  extends SQLiteAssetHelper {
 
         String [] sqlSelect = {FishContract.SCINAME,
                 FishContract.COMMONNAME,
-                FishContract.AGE,
+                FishContract.BREEDING,
                 FishContract.SIZE,
                 FishContract.OVERVIEW,
-                FishContract.IMAGE};
+                FishContract.IMAGE,
+                FishContract.DIET,
+                FishContract.PH,
+                FishContract.DIFFICULT,
+                FishContract.AGGRESSION,
+                FishContract.TEMPERATURE,
+                FishContract.WATER_HARDNESS};
 
         String sqlTables = tableName;
 

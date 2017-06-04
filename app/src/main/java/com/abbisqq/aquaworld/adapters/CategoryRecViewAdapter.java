@@ -59,7 +59,7 @@ public class CategoryRecViewAdapter extends RecyclerView.Adapter<CategoryRecView
 
         ListItem item = listData.get(position);
         holder.caregory_textView.setText(item.getTitle());
-        Picasso.with(mContext).load(item.getImageRes()).resize(150,80).centerCrop().into(holder.caregory_imageView);
+        Picasso.with(mContext).load(item.getImageRes()).fit().into(holder.caregory_imageView);
 
     }
 

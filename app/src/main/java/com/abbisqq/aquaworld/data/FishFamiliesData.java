@@ -11,7 +11,7 @@ import java.util.List;
 
 public class FishFamiliesData {
 
-    private static final String[] titles = {"cichlid","Catfish",
+    private static final String[] titles = {"Cichlid","Catfish",
             "Cichids","Darters","Cyprinis",
             "GoldFish","Catfish",
             "Cichids","Darters","Cyprinis","GoldFish","Catfish",
