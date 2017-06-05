@@ -6,20 +6,23 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.abbisqq.aquaworld.R;
 import com.abbisqq.aquaworld.adapters.RecVAdapter;
+import com.abbisqq.aquaworld.data.FishContract;
 import com.abbisqq.aquaworld.data.FishDatabaseHelper;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FishListFragment extends Fragment {
+public class FishListFragment extends Fragment implements RecVAdapter.ItemClickCallBack{
 
     RecyclerView recyclerView;
     RecVAdapter adapter;
@@ -58,6 +61,7 @@ public class FishListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.fish_rv);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecVAdapter(cursor, context);
+        adapter.setItemClickCallBack(this);
         recyclerView.setAdapter(adapter);
 
         // Inflate the layout for this fragment
@@ -68,5 +72,32 @@ public class FishListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("table_name",tableName);
+    }
+
+    @Override
+    public void onItemClick(int p) {
+
+        cursor.moveToPosition(p);
+
+        String sciName = cursor.getString(cursor.getColumnIndex(FishContract.SCINAME));
+        String commonName = cursor.getString(cursor.getColumnIndex(FishContract.COMMONNAME));
+        String size = cursor.getString(cursor.getColumnIndex(FishContract.SIZE));
+        String ph = cursor.getString(cursor.getColumnIndex(FishContract.PH));
+        String aggression = cursor.getString(cursor.getColumnIndex(FishContract.AGGRESSION));
+        String diet = cursor.getString(cursor.getColumnIndex(FishContract.DIET));
+        String difficult = cursor.getString(cursor.getColumnIndex(FishContract.DIFFICULT));
+        String temperature = cursor.getString(cursor.getColumnIndex(FishContract.TEMPERATURE));
+        String image = cursor.getString(cursor.getColumnIndex(FishContract.IMAGE));
+        String breeding = cursor.getString(cursor.getColumnIndex(FishContract.BREEDING));
+        String overview = cursor.getString(cursor.getColumnIndex(FishContract.OVERVIEW));
+
+        Fragment fragment =  FishDetailsFragment.newInstance(sciName,commonName,size,
+                ph,aggression,diet,difficult,temperature,image,breeding,overview);
+
+            this.getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_container,fragment)
+                    .addToBackStack(null)
+                    .commit();
     }
 }

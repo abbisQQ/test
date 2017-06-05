@@ -1,9 +1,7 @@
 package com.abbisqq.aquaworld.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +21,22 @@ public class RecVAdapter extends RecyclerView.Adapter<RecVAdapter.RecVHolder>{
 
     private Cursor mCursor;
     private Context mContext;
+
+
+
+    private ItemClickCallBack itemClickCallBack;
+
+    public  interface ItemClickCallBack {
+        void onItemClick(int p);
+    }
+
+
+    public void setItemClickCallBack(final ItemClickCallBack itemClickCallBack) {
+        this.itemClickCallBack = itemClickCallBack;
+    }
+
+
+
 
 
     public RecVAdapter(Cursor mCursor, Context mContext) {
@@ -50,6 +64,7 @@ public class RecVAdapter extends RecyclerView.Adapter<RecVAdapter.RecVHolder>{
         Picasso.with(mContext)
                 .load(mCursor.getString(mCursor.getColumnIndex(FishContract.IMAGE)))
                 .error(R.drawable.nofish)
+                .placeholder(R.drawable.progress_animation)
                 .fit().into(holder.iv);
 
 
@@ -61,16 +76,30 @@ public class RecVAdapter extends RecyclerView.Adapter<RecVAdapter.RecVHolder>{
         return mCursor.getCount();
     }
 
-    class RecVHolder extends RecyclerView.ViewHolder{
+    class RecVHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView iv;
         TextView tv;
+        View container;
 
 
         public RecVHolder(View itemView) {
             super(itemView);
             iv = (ImageView)itemView.findViewById(R.id.list_image_view);
             tv = (TextView)itemView.findViewById(R.id.list_name_text_view);
+            container = itemView.findViewById(R.id.fish_list_container);
+            container.setOnClickListener(this);
+        }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.fish_list_container) {
+            //gets the position of the item hat was clicked
+            itemClickCallBack.onItemClick(getAdapterPosition());
         }
     }
+    }
+
+
+
 }
