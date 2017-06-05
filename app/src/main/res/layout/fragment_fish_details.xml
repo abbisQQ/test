@@ -56,7 +56,7 @@
             android:background="@color/main_background"
             android:elevation="5dp"
             android:fontFamily="sans-serif-condensed"
-            android:gravity="start"
+            android:gravity="center"
             android:inputType="none"
             android:paddingEnd="10dp"
             android:paddingStart="10dp"
@@ -164,36 +164,35 @@
             android:id="@+id/aggression_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="40dp"
             android:background="@color/main_background"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temperature_button"
-            app:srcCompat="@mipmap/aggressive_final"
             android:elevation="5dp"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/temperature_button"
+            app:srcCompat="@mipmap/aggressive_final" />
 
 
         <TextView
             android:id="@+id/overview_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:padding="15dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:background="@color/main_background"
             android:elevation="5dp"
             android:fontFamily="sans-serif-condensed"
             android:gravity="start"
-            tools:text="I am the overview"
+            android:padding="5dp"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/aggression_button"
-            app:layout_constraintRight_toRightOf="parent"
-            />
+            app:layout_constraintLeft_toLeftOf="@+id/temperature_button"
+            app:layout_constraintRight_toRightOf="@+id/temperature_button"
+            app:layout_constraintTop_toTopOf="@+id/aggression_button"
+            tools:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
 
 
         <TextView
@@ -214,14 +213,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overview_tv"
             app:layout_constraintRight_toRightOf="parent"
+
             />
-
-
-
-
-
-
-
 
 
     </android.support.constraint.ConstraintLayout>

@@ -50,7 +50,7 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
     private ImageButton measureButton,phButton;
     private ImageView fishImage;
-    private TextView sciNameTV,commonNameTV;
+    private TextView sciNameTV,commonNameTV,overviewTV,difficultTV;
 
 
     public FishDetailsFragment() {
@@ -129,6 +129,28 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
         phButton = (ImageButton)view.findViewById(R.id.ph_button);
         phButton.setOnClickListener(this);
+
+        overviewTV = (TextView)view.findViewById(R.id.overview_tv);
+        overviewTV.setText(mOver);
+        difficultTV = (TextView)view.findViewById(R.id.difficult_tv);
+        switch (mDifficult){
+            case "1":
+                difficultTV.setText("Current fish difficulty: Very Easy");
+                break;
+            case "2":
+                difficultTV.setText("Current fish difficulty: Easy");
+                break;
+            case "3":
+                difficultTV.setText("Current fish difficulty: Normal");
+                break;
+            case "4":
+                difficultTV.setText("Current fish difficulty: Hard");
+                break;
+            case "5":
+                difficultTV.setText("Current fish difficulty: Very Hard");
+                break;
+        }
+
 
         return view;
     }
