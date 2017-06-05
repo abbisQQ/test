@@ -6,16 +6,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.abbisqq.aquaworld.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FishDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FishDetailsFragment extends Fragment {
+public class FishDetailsFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SCINAME = "sci_name";
@@ -43,7 +47,11 @@ public class FishDetailsFragment extends Fragment {
     private String mBreed;
     private String mOver;
 
-    TextView test;
+
+    private ImageButton measureButton,phButton;
+    private ImageView fishImage;
+    private TextView sciNameTV,commonNameTV;
+
 
     public FishDetailsFragment() {
         // Required empty public constructor
@@ -100,13 +108,40 @@ public class FishDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fish_details, container, false);
 
+        fishImage = (ImageView)view.findViewById(R.id.fish_main_image);
 
-        test = (TextView)view.findViewById(R.id.testtv);
-        test.append(mSci+"\n"+
-                mCom+"\n"+mSize+"\n"+mPh+"\n"+mAggr+"\n"+mDiet+"\n"+mTemperature);
+        measureButton = (ImageButton)view.findViewById(R.id.measure_button);
+        measureButton.setOnClickListener(this);
 
+        Picasso.with(getContext()).load(R.drawable.measure).fit().into(measureButton);
+
+        Picasso.with(getContext()).load(mImage).fit().placeholder(R.drawable.progress_animation).into(fishImage);
+
+        sciNameTV = (TextView)view.findViewById(R.id.sciName_tv);
+        sciNameTV.setText(getString(R.string.scientific_name)+mSci);
+
+        commonNameTV = (TextView)view.findViewById(R.id.common_name_tv);
+
+        if(mCom==null||mCom.isEmpty()||mCom.equals("N/A"))
+            mCom = "    N/A    ";
+        commonNameTV.setText(getString(R.string.common_name) + mCom);
+
+
+        phButton = (ImageButton)view.findViewById(R.id.ph_button);
+        phButton.setOnClickListener(this);
 
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.measure_button:
+                Toast.makeText(getContext(),mSize,Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ph_button:
+                Toast.makeText(getContext(),mPh,Toast.LENGTH_SHORT).show();
+
+        }
+    }
 }
