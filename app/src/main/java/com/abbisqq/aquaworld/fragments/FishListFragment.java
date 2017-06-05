@@ -100,4 +100,14 @@ public class FishListFragment extends Fragment implements RecVAdapter.ItemClickC
                     .addToBackStack(null)
                     .commit();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+        helper.close();
+    }
+
+
+
 }
