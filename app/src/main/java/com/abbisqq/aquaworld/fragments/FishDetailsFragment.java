@@ -1,9 +1,16 @@
 package com.abbisqq.aquaworld.fragments;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -12,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.abbisqq.aquaworld.R;
+import com.abbisqq.aquaworld.data.FishContract;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -20,7 +28,7 @@ import com.squareup.picasso.Picasso;
  * create an instance of this fragment.
  */
 public class FishDetailsFragment extends Fragment implements View.OnClickListener{
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SCINAME = "sci_name";
     private static final String ARG_COMMONNAME = "common_name";
@@ -33,8 +41,12 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
     private static final String ARG_IMAGE = "image";
     private static final String ARG_BREEDING = "breeding";
     private static final String ARG_OVERVIEW = "overview";
+    private static final String ARG_WATER = "water";
+    private static int cursorPosition;
+    private static Cursor cursorStatic;
 
-    // TODO: Rename and change types of parameters
+    private String degreesF;
+    private String degreesC;
     private String mSci;
     private String mCom;
     private String mSize;
@@ -46,11 +58,31 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
     private String mImage;
     private String mBreed;
     private String mOver;
+    private String mWater;
+
 
 
     private ImageButton measureButton,phButton;
     private ImageView fishImage;
     private TextView sciNameTV,commonNameTV,overviewTV,difficultTV;
+
+
+
+    private ImageButton dietButton;
+    private ImageButton waterButton;
+    private ImageButton breedingButton;
+    private ImageButton temperatureButton;
+    private ImageButton aggressionButton;
+    private TextView phTextView;
+    private TextView dietTextView;
+    private TextView waterTextView;
+    private TextView breedingTextView;
+    private TextView temperaturTextView;
+    private TextView temperTextView;
+    private TextView sizeTextView;
+    private GestureDetectorCompat mDetector;
+
+
 
 
     public FishDetailsFragment() {
@@ -62,18 +94,38 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
      * this fragment using the provided parameters.
      * @return A new instance of fragment FishDetailsFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static FishDetailsFragment newInstance(String sciName, String commonName,String size,String ph,
-                                                  String aggresion,String diet,String difficult, String temperature,
-                                                  String image,String breeding,String overview) {
+
+    public static FishDetailsFragment newInstance(Cursor cursor,int p) {
         FishDetailsFragment fragment = new FishDetailsFragment();
+        cursorPosition = p;
+        cursorStatic = cursor;
+
+
+        cursor.moveToPosition(p);
+        String sciName = cursor.getString(cursor.getColumnIndex(FishContract.SCINAME));
+        String commonName = cursor.getString(cursor.getColumnIndex(FishContract.COMMONNAME));
+        String size = cursor.getString(cursor.getColumnIndex(FishContract.SIZE));
+        String ph = cursor.getString(cursor.getColumnIndex(FishContract.PH));
+        String aggression = cursor.getString(cursor.getColumnIndex(FishContract.AGGRESSION));
+        String diet = cursor.getString(cursor.getColumnIndex(FishContract.DIET));
+        String water = cursor.getString(cursor.getColumnIndex(FishContract.WATER_HARDNESS));
+        String difficult = cursor.getString(cursor.getColumnIndex(FishContract.DIFFICULT));
+        String temperature = cursor.getString(cursor.getColumnIndex(FishContract.TEMPERATURE));
+        String image = cursor.getString(cursor.getColumnIndex(FishContract.IMAGE));
+        String breeding = cursor.getString(cursor.getColumnIndex(FishContract.BREEDING));
+        String overview = cursor.getString(cursor.getColumnIndex(FishContract.OVERVIEW));
+
+
+
+
         Bundle args = new Bundle();
         args.putString(ARG_SCINAME, sciName);
         args.putString(ARG_COMMONNAME, commonName);
         args.putString(ARG_SIZE, size);
         args.putString(ARG_PH, ph);
-        args.putString(ARG_AGGRESSION, aggresion);
+        args.putString(ARG_AGGRESSION, aggression);
         args.putString(ARG_DIET, diet);
+        args.putString(ARG_WATER,water);
         args.putString(ARG_DIFFICULT, difficult);
         args.putString(ARG_TEMPERATURE, temperature);
         args.putString(ARG_IMAGE, image);
@@ -98,6 +150,7 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
             mImage = getArguments().getString(ARG_IMAGE);
             mBreed = getArguments().getString(ARG_BREEDING);
             mOver = getArguments().getString(ARG_OVERVIEW);
+            mWater = getArguments().getString(ARG_WATER);
 
         }
     }
@@ -107,6 +160,12 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fish_details, container, false);
+
+        sizeTextView = (TextView)view.findViewById(R.id.size_textView);
+
+        // code for celcius and Far
+        degreesF = " \u2109";
+        degreesC = " \u2103";
 
         fishImage = (ImageView)view.findViewById(R.id.fish_main_image);
 
@@ -129,8 +188,38 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
         phButton = (ImageButton)view.findViewById(R.id.ph_button);
         phButton.setOnClickListener(this);
+        phTextView = (TextView)view.findViewById(R.id.ph_textView);
 
-        overviewTV = (TextView)view.findViewById(R.id.overview_tv);
+        dietButton = (ImageButton)view.findViewById(R.id.diet_button);
+        dietButton.setOnClickListener(this);
+        dietTextView = (TextView)view.findViewById(R.id.feeding_textView);
+
+        waterButton = (ImageButton)view.findViewById(R.id.water_button);
+        waterButton.setOnClickListener(this);
+        waterTextView = (TextView)view.findViewById(R.id.water_textView);
+
+        breedingButton = (ImageButton)view.findViewById(R.id.breeding_button);
+        breedingButton.setOnClickListener(this);
+        breedingTextView = (TextView)view.findViewById(R.id.breeding_textView);
+
+        temperatureButton = (ImageButton)view.findViewById(R.id.temperature_button);
+        temperatureButton.setOnClickListener(this);
+        temperaturTextView = (TextView)view.findViewById(R.id.temperature_textView);
+
+        aggressionButton= (ImageButton)view.findViewById(R.id.aggression_button);
+        aggressionButton.setOnClickListener(this);
+        temperTextView = (TextView)view.findViewById(R.id.temper_textView);
+
+        phTextView.setText("The water PH must be: " + checkerMethod(mPh));
+        temperTextView.setText("Behavior: " + checkerMethod(mAggr));
+        dietTextView.setText("This is fish is: "+checkerMethod(mDiet));
+        waterTextView.setText("Water must be: "+ checkerMethod(mWater));
+        breedingTextView.setText("Breeding type: " + checkerMethod(mBreed));
+        temperaturTextView.setText("Temperature: " +checkerMethod(mTemperature)+degreesC);
+        sizeTextView.setText("<------"+mSize+" cm"+"------>");
+
+
+    overviewTV = (TextView)view.findViewById(R.id.overview_tv);
         overviewTV.setText(mOver);
         difficultTV = (TextView)view.findViewById(R.id.difficult_tv);
         switch (mDifficult){
@@ -149,21 +238,79 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
             case "5":
                 difficultTV.setText("Current fish difficulty: Very Hard");
                 break;
+            default:
+                difficultTV.setText("Current fish difficulty: Unknown");
         }
 
 
         return view;
     }
 
+
+
+
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.measure_button:
-                Toast.makeText(getContext(),mSize,Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.ph_button:
-                Toast.makeText(getContext(),mPh,Toast.LENGTH_SHORT).show();
+        if ( v == measureButton ) {
+            // Handle clicks for measureButton
+            // cm to inch
+            if (sizeTextView.getText().toString().contains("cm")) {
+                sizeTextView.setText("<------"+String.valueOf(Math.round((Float.valueOf(mSize)*0.393701)*100.0)/100.0)+" inch------>");
+            }else {
+                sizeTextView.setText("<------"+mSize+" cm"+"------>");
+            }
+        } else if ( v == phButton ) {
+            // Handle clicks for phButton
+
+        } else if ( v == dietButton ) {
+            // Handle clicks for dietButton
+
+        } else if ( v == waterButton ) {
+            // Handle clicks for waterButton
+
+        } else if ( v == breedingButton ) {
+            // Handle clicks for breedingButton
+
+        } else if ( v == temperatureButton ) {
+            // Handle clicks for temperatureButton
+            // celcius to F
+            if(temperaturTextView.getText().toString().endsWith(degreesC)) {
+                temperaturTextView.setText("Temperature: " + checkerMethod(String.valueOf(Math.round((Float.valueOf(mTemperature) * 9 / 5)*100.0)/100.0 + 32) + degreesF));
+            }else {
+                temperaturTextView.setText("Temperature: " +checkerMethod(mTemperature)+degreesC);
+            }
+        } else if ( v == aggressionButton ) {
+            // Handle clicks for aggressionButton
+
 
         }
     }
+    //safety when the strings are null or empty
+    private String checkerMethod(String arg){
+        if(arg==null|arg.isEmpty())
+            arg="  N/A  ";
+
+        return arg;
+    }
+
+
+
+
+    private void fragmentChange(){
+        if(cursorPosition>(cursorStatic.getColumnCount()-1)){
+            cursorPosition=0;
+        }else {
+            cursorPosition++;
+            Toast.makeText(getContext(),String.valueOf(cursorStatic.getCount()),Toast.LENGTH_SHORT).show();
+        }
+
+        Fragment fragment =  FishDetailsFragment.newInstance(cursorStatic,cursorPosition);
+        this.getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container,fragment)
+                .commit();
+    }
+
+
 }

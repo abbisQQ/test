@@ -26,7 +26,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="@dimen/image_height"
-        android:textSize="@dimen/text_size"
+        android:textSize="@dimen/text_small"
         android:id="@+id/list_name_text_view"
         tools:text="Hello"
         android:textColor="@color/text_color"
