@@ -58,9 +58,12 @@ public class RecVAdapter extends RecyclerView.Adapter<RecVAdapter.RecVHolder>{
             return;
         }
 
-
-        holder.tv.setText(mCursor.getString(mCursor.getColumnIndex(FishContract.SCINAME)));
-
+        if(mCursor.getString(mCursor.getColumnIndex(FishContract.COMMONNAME)).isEmpty()
+                ||mCursor.getString(mCursor.getColumnIndex(FishContract.COMMONNAME)).contains("N/A")){
+            holder.tv.setText(mCursor.getString(mCursor.getColumnIndex(FishContract.SCINAME)));
+        }else {
+            holder.tv.setText(mCursor.getString(mCursor.getColumnIndex(FishContract.COMMONNAME)));
+        }
         Picasso.with(mContext)
                 .load(mCursor.getString(mCursor.getColumnIndex(FishContract.IMAGE)))
                 .error(R.drawable.nofish)

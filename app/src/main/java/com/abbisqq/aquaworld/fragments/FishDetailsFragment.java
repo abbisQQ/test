@@ -1,6 +1,7 @@
 package com.abbisqq.aquaworld.fragments;
 
 
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -86,7 +88,6 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
 
 
-
     public FishDetailsFragment() {
         // Required empty public constructor
     }
@@ -154,6 +155,8 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
             mOver = getArguments().getString(ARG_OVERVIEW);
             mWater = getArguments().getString(ARG_WATER);
 
+
+
         }
     }
 
@@ -162,8 +165,10 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fish_details, container, false);
-
         mDetector = new GestureDetectorCompat(getContext(),this);
+
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
         sizeTextView = (TextView)view.findViewById(R.id.size_textView);
@@ -257,17 +262,25 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
 
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
 
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
 
-
-
+                {
+                    getFragmentManager().popBackStack("fish_details",1);
+                }
+                return false;
+            }
+        } );
 
         return view;
     }
-
-
-
-
 
     @Override
     public void onClick(View v) {
@@ -317,30 +330,28 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
 
     private void fragmentChange(String side){
-        if(cursorPosition>(cursorStatic.getColumnCount()-1)){
-            cursorPosition=0;}
-        else if (cursorPosition<0){
-            cursorPosition=cursorStatic.getColumnCount()-1;
 
-        }else {
+
+
             if(side.equals("right")) {
-                cursorPosition++;
+                cursorStatic.moveToPrevious();
             }else{
-                cursorPosition--;
+                cursorStatic.moveToNext();
             }
-        }
 
-        Fragment fragment =  FishDetailsFragment.newInstance(cursorStatic,cursorPosition);
+
+        Fragment fragment =  FishDetailsFragment.newInstance(cursorStatic,cursorStatic.getPosition());
         this.getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main_container,fragment)
+                .replace(R.id.main_container,fragment).addToBackStack("fish_details")
                 .commit();
     }
 
 
     @Override
     public boolean onDown(MotionEvent e) {
-        return false;
+        onClick(this.getView());
+        return true;
     }
 
     @Override
@@ -365,7 +376,6 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
         boolean result = false;
         try {
             float diffY = e2.getY() - e1.getY();

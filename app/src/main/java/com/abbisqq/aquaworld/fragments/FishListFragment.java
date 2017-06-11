@@ -2,6 +2,7 @@ package com.abbisqq.aquaworld.fragments;
 
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,6 +51,8 @@ public class FishListFragment extends Fragment implements RecVAdapter.ItemClickC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fish_list, container, false);
 
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+
         if(savedInstanceState!=null) {
             tableName = savedInstanceState.getString("table_name");
 
@@ -63,6 +66,9 @@ public class FishListFragment extends Fragment implements RecVAdapter.ItemClickC
         adapter = new RecVAdapter(cursor, context);
         adapter.setItemClickCallBack(this);
         recyclerView.setAdapter(adapter);
+
+
+
 
         // Inflate the layout for this fragment
         return view;
@@ -78,7 +84,6 @@ public class FishListFragment extends Fragment implements RecVAdapter.ItemClickC
     public void onItemClick(int p) {
 
         Fragment fragment =  FishDetailsFragment.newInstance(cursor,p);
-
             this.getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_container,fragment)

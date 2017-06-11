@@ -1,6 +1,7 @@
 package com.abbisqq.aquaworld.fragments;
 
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,9 +36,6 @@ public class FishCategoryListFragment extends Fragment implements CategoryRecVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
-
-
-
         recyclerView = (RecyclerView)view.findViewById(R.id.category_rec_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         listData = (ArrayList) FishFamiliesData.getListData();
@@ -58,15 +56,25 @@ public class FishCategoryListFragment extends Fragment implements CategoryRecVie
             case 0:
                 getFragmentManager().beginTransaction().
                         replace(R.id.main_container,new FishListFragment(FishContract.TABLE_NAME_CICHLIDS))
-                        .addToBackStack(null).commit();
+                        .addToBackStack("added").commit();
                 break;
             case 1:
                 getFragmentManager().beginTransaction().
                         replace(R.id.main_container,new FishListFragment(FishContract.TABLE_NAME_TETRAS))
-                        .addToBackStack(null).commit();
+                        .addToBackStack("added").commit();
                 break;
         }
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    }
+
+
+
 
 
 }
