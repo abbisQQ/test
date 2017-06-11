@@ -77,22 +77,7 @@ public class FishListFragment extends Fragment implements RecVAdapter.ItemClickC
     @Override
     public void onItemClick(int p) {
 
-        cursor.moveToPosition(p);
-
-        String sciName = cursor.getString(cursor.getColumnIndex(FishContract.SCINAME));
-        String commonName = cursor.getString(cursor.getColumnIndex(FishContract.COMMONNAME));
-        String size = cursor.getString(cursor.getColumnIndex(FishContract.SIZE));
-        String ph = cursor.getString(cursor.getColumnIndex(FishContract.PH));
-        String aggression = cursor.getString(cursor.getColumnIndex(FishContract.AGGRESSION));
-        String diet = cursor.getString(cursor.getColumnIndex(FishContract.DIET));
-        String difficult = cursor.getString(cursor.getColumnIndex(FishContract.DIFFICULT));
-        String temperature = cursor.getString(cursor.getColumnIndex(FishContract.TEMPERATURE));
-        String image = cursor.getString(cursor.getColumnIndex(FishContract.IMAGE));
-        String breeding = cursor.getString(cursor.getColumnIndex(FishContract.BREEDING));
-        String overview = cursor.getString(cursor.getColumnIndex(FishContract.OVERVIEW));
-
-        Fragment fragment =  FishDetailsFragment.newInstance(sciName,commonName,size,
-                ph,aggression,diet,difficult,temperature,image,breeding,overview);
+        Fragment fragment =  FishDetailsFragment.newInstance(cursor,p);
 
             this.getFragmentManager()
                     .beginTransaction()

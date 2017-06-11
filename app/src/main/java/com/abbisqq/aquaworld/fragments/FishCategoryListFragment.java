@@ -59,6 +59,14 @@ public class FishCategoryListFragment extends Fragment implements CategoryRecVie
                 getFragmentManager().beginTransaction().
                         replace(R.id.main_container,new FishListFragment(FishContract.TABLE_NAME_CICHLIDS))
                         .addToBackStack(null).commit();
+                break;
+            case 1:
+                getFragmentManager().beginTransaction().
+                        replace(R.id.main_container,new FishListFragment(FishContract.TABLE_NAME_TETRAS))
+                        .addToBackStack(null).commit();
+                break;
         }
     }
+
+
 }

@@ -11,13 +11,13 @@ import java.util.List;
 
 public class FishFamiliesData {
 
-    private static final String[] titles = {"Cichlid","Catfish",
+    private static final String[] titles = {"Cichlid","Tetras",
             "Cichids","Darters","Cyprinis",
             "GoldFish","Catfish",
             "Cichids","Darters","Cyprinis","GoldFish","Catfish",
             "Cichids","Darters","Cyprinis"};
 
-    private static final int[] icons = {R.drawable.cichlid,android.R.drawable.ic_menu_add,
+    private static final int[] icons = {R.drawable.cichlid,R.drawable.tetras,
             android.R.drawable.ic_popup_reminder,
             android.R.drawable.arrow_down_float,
             android.R.drawable.alert_dark_frame,

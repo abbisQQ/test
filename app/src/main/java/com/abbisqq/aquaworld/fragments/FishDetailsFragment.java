@@ -27,7 +27,7 @@ import com.squareup.picasso.Picasso;
  * Use the {@link FishDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FishDetailsFragment extends Fragment implements View.OnClickListener{
+public class FishDetailsFragment extends Fragment implements View.OnClickListener,GestureDetector.OnGestureListener,View.OnTouchListener{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SCINAME = "sci_name";
@@ -81,6 +81,8 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
     private TextView temperTextView;
     private TextView sizeTextView;
     private GestureDetectorCompat mDetector;
+    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
 
 
@@ -160,6 +162,9 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fish_details, container, false);
+
+        mDetector = new GestureDetectorCompat(getContext(),this);
+
 
         sizeTextView = (TextView)view.findViewById(R.id.size_textView);
 
@@ -242,6 +247,20 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
                 difficultTV.setText("Current fish difficulty: Unknown");
         }
 
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
+                return false;
+            }
+        });
+
+
+
+
+
+
+
 
         return view;
     }
@@ -297,12 +316,18 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
 
 
 
-    private void fragmentChange(){
+    private void fragmentChange(String side){
         if(cursorPosition>(cursorStatic.getColumnCount()-1)){
-            cursorPosition=0;
+            cursorPosition=0;}
+        else if (cursorPosition<0){
+            cursorPosition=cursorStatic.getColumnCount()-1;
+
         }else {
-            cursorPosition++;
-            Toast.makeText(getContext(),String.valueOf(cursorStatic.getCount()),Toast.LENGTH_SHORT).show();
+            if(side.equals("right")) {
+                cursorPosition++;
+            }else{
+                cursorPosition--;
+            }
         }
 
         Fragment fragment =  FishDetailsFragment.newInstance(cursorStatic,cursorPosition);
@@ -310,6 +335,71 @@ public class FishDetailsFragment extends Fragment implements View.OnClickListene
                 .beginTransaction()
                 .replace(R.id.main_container,fragment)
                 .commit();
+    }
+
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        boolean result = false;
+        try {
+            float diffY = e2.getY() - e1.getY();
+            float diffX = e2.getX() - e1.getX();
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        onSwipeRight();
+                    } else {
+                        onSwipeLeft();
+                    }
+                    result = true;
+                }
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public void onSwipeRight() {
+        fragmentChange("right");
+    }
+
+    public void onSwipeLeft() {
+        fragmentChange("left");
+    }
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        mDetector.onTouchEvent(event);
+        v.onTouchEvent(event);
+        return false;
     }
 
 
